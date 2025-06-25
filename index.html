@@ -35,10 +35,6 @@
             padding: 0.5em 1em;
             border: 1px solid #ccc;
             cursor: pointer;
-	#bikeParts * {
-  stroke: black;
-  stroke-width: 0.5;
-}
 
         }
     </style>
@@ -5728,6 +5724,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+	document.addEventListener('DOMContentLoaded', () => {
+  const svg = document.querySelector('svg');
+  const bikeParts = svg.querySelectorAll('#bikeParts *');
+
+  bikeParts.forEach(el => {
+    el.setAttribute('stroke', 'black');
+    el.setAttribute('stroke-width', '0.5'); // Thin outline
+  });
+});
     svg.addEventListener('click', function(event) {
         const target = event.target;
         const insideBikeParts = target.closest('#bikeParts');
