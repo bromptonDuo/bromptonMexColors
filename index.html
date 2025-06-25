@@ -5804,15 +5804,22 @@ function resetColors() {
         selectedElement = null;
     }
 }
-        function applyColor(hex) {
-            if (selectedElement) {
-                if (!selectedElement.hasAttribute('data-original-fill')) {
-                    let original = selectedElement.getAttribute('fill') || '#ffffff';
-                    selectedElement.setAttribute('data-original-fill', original); selectedElement.style.fill = original;
-                }
-                selectedElement.setAttribute('fill', hex); selectedElement.style.fill = hex;
-            }
-        }
+
+	    function applyColor(hex) {
+  if (selectedElement) {
+    if (!selectedElement.hasAttribute('data-original-fill')) {
+      const original = selectedElement.getAttribute('fill') || window.getComputedStyle(selectedElement).fill;
+      selectedElement.setAttribute('data-original-fill', original);
+    }
+    selectedElement.setAttribute('fill', hex);
+    selectedElement.style.fill = hex;
+
+    // ❗ Remove highlight and clear selection
+    selectedElement.classList.remove("highlight");
+    selectedElement = null;
+  }
+}
+
 
 
 
