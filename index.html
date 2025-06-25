@@ -5844,6 +5844,47 @@ function resetColors() {
         });
     </script>
 
+<script>
+function downloadPNG() {
+    const svgElement = document.querySelector("svg");
+
+    // Clonar el SVG y limpiar clases como 'highlight'
+    const clone = svgElement.cloneNode(true);
+    clone.querySelectorAll('.highlight').forEach(el => el.classList.remove('highlight'));
+
+    // Asegurarse de que tenga fondo blanco si se desea
+    const bbox = svgElement.getBBox();
+    const canvas = document.createElement("canvas");
+    canvas.width = bbox.width;
+    canvas.height = bbox.height;
+
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#ffffff"; // Fondo blanco
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const svgData = new XMLSerializer().serializeToString(clone);
+    const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(svgBlob);
+
+    const img = new Image();
+    img.onload = function () {
+        ctx.drawImage(img, 0, 0);
+        URL.revokeObjectURL(url);
+        const imgURI = canvas.toDataURL("image/png");
+
+        const a = document.createElement("a");
+        a.download = "brompton_design.png";
+        a.href = imgURI;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    };
+
+    // SVGs from blobs must use crossOrigin to avoid tainting the canvas
+    img.crossOrigin = "anonymous";
+    img.src = url;
+}
+</script>
 
 
 </body>
