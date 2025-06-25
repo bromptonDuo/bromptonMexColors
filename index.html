@@ -5869,12 +5869,12 @@ function applyColor(hex) {
 
 
 
-        function rgbToHex(rgb) {
-            if (rgb.startsWith('#')) return rgb;
-            const result = rgb.match(/\d+/g);
-            if (!result) return '#ffffff';
-            return "#" + result.map(x => parseInt(x).toString(16).padStart(2, '0')).join('');
-        }
+function rgbToHex(rgb) {
+  if (rgb.startsWith('#')) return rgb;
+  const result = rgb.match(/\d+/g);
+  if (!result || result.length < 3) return "#000000";
+  return "#" + result.slice(0, 3).map(x => parseInt(x).toString(16).padStart(2, '0')).join('').toUpperCase();
+}
 
         document.addEventListener('DOMContentLoaded', () => {
             createColorButtons();
