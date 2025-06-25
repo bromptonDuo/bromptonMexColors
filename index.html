@@ -5870,11 +5870,15 @@ function applyColor(hex) {
 
 
 function rgbToHex(rgb) {
-  if (rgb.startsWith('#')) return rgb.toUpperCase();
+  if (rgb.startsWith('#')) return rgb.toLowerCase();
   const result = rgb.match(/\d+/g);
   if (!result || result.length < 3) return "#000000";
-  return "#" + result.slice(0, 3).map(x => parseInt(x).toString(16).padStart(2, '0')).join('').toUpperCase();
+  return "#" + result.slice(0, 3).map(x => {
+    const hex = parseInt(x).toString(16);
+    return hex.length === 1 ? "0" + hex : hex;
+  }).join('').toLowerCase();
 }
+
 
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -6015,7 +6019,7 @@ function updateColorSummary() {
     if (!fill) return;
 
     const name = el.id || el.getAttribute("data-name") || "Parte sin nombre";
-    const hex = rgbToHex(fill).toUpperCase();
+    const hex = rgbToHex(fill).toLowerCase();
 
     const colorName = colorNameMap[hex] || getClosestColorName(hex);
 
@@ -6024,6 +6028,7 @@ function updateColorSummary() {
     list.appendChild(item);
   });
 }
+
 
 
 
