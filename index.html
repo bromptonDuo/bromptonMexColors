@@ -5870,11 +5870,12 @@ function applyColor(hex) {
 
 
 function rgbToHex(rgb) {
-  if (rgb.startsWith('#')) return rgb;
+  if (rgb.startsWith('#')) return rgb.toUpperCase();
   const result = rgb.match(/\d+/g);
   if (!result || result.length < 3) return "#000000";
   return "#" + result.slice(0, 3).map(x => parseInt(x).toString(16).padStart(2, '0')).join('').toUpperCase();
 }
+
 
         document.addEventListener('DOMContentLoaded', () => {
             createColorButtons();
@@ -6014,16 +6015,16 @@ function updateColorSummary() {
     if (!fill) return;
 
     const name = el.id || el.getAttribute("data-name") || "Parte sin nombre";
-
-    // Normalize the color (convert RGB to hex if needed)
     const hex = rgbToHex(fill).toUpperCase();
-    const colorName = colorNameMap[hex] || hex;
+
+    const colorName = colorNameMap[hex] || getClosestColorName(hex);
 
     const item = document.createElement("li");
     item.textContent = `${name}: ${colorName}`;
     list.appendChild(item);
   });
 }
+
 
 
 </script>
