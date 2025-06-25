@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CDMX Bike Color Picker</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    .palette {
+      margin: 1rem;
+    }
+    .color-btn {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      border: 1px solid #aaa;
+      margin: 0 5px;
+      cursor: pointer;
+    }
+    #svgWrapper {
+      width: 100%;
+      height: 80vh;
+      overflow: hidden;
+    }
+    #svgWrapper svg {
+      width: 100%;
+      height: 100%;
+    }
+    #downloadBtn {
+      margin: 1rem;
+      padding: 0.5rem 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Color your CDMX Bike</h1>
+  <div class="palette">
+    <div class="color-btn" style="background: red;" data-color="red"></div>
+    <div class="color-btn" style="background: blue;" data-color="blue"></div>
+    <div class="color-btn" style="background: green;" data-color="green"></div>
+    <div class="color-btn" style="background: orange;" data-color="orange"></div>
+    <div class="color-btn" style="background: pink;" data-color="pink"></div>
+    <div class="color-btn" style="background: black;" data-color="black"></div>
+  </div>
+  <div id="svgWrapper"></div>
+  <button id="downloadBtn">Download PNG</button>
+
+  <script>
+    let selected = null;
+
+    fetch("mexDesign.svg")
+      .then(res => res.text())
+      .then(svgText => {
+        document.getElementById("svgWrapper").innerHTML = svgText;
+
+        const bikeGroup = document.getElementById("bikeParts");
+        if (bikeGroup) {
+          bikeGroup.querySelectorAll("path, rect, circle, ellipse, polygon").forEach(part => {
+            part.style.cursor = "pointer";
+            part.addEventListener("click", e => {
+              e.stopPropagation();
+              if (selected) selected.style.stroke = "";
+              selected = part;
+              selected.style.stroke = "cyan";
+              selected.style.strokeWidth = "2px";
+            });
+          });
+        }
+      });
+
+    document.querySelectorAll(".color-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const color = btn.getAttribute("data-color");
+        if (selected) {
+          selected.setAttribute("fill", color);
+        }
+      });
+    });
+
+    document.getElementById("downloadBtn").addEventListener("click", () => {
+      const svgElement = document.querySelector("#svgWrapper svg");
+      const svgData = new XMLSerializer().serializeToString(svgElement);
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      const image = new Image();
+      const svgBlob = new Blob([svgData], {type: "image/svg+xml;charset=utf-8"});
+      const url = URL.createObjectURL(svgBlob);
+      image.onload = function () {
+        canvas.width = image.width;
+        canvas.height = image.height;
+        ctx.drawImage(image, 0, 0);
+        URL.revokeObjectURL(url);
+        const imgURI = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+        const link = document.createElement("a");
+        link.download = "bike_colored.png";
+        link.href = imgURI;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      };
+      image.src = url;
+    });
+  </script>
+</body>
+</html>
