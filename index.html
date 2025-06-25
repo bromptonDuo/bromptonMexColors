@@ -5713,6 +5713,12 @@ LgsdFlUkASncMUvtSfacaOdJo0pWZYKZpTPB3A==
 
     </div>
 
+	<div id="colorSummary" style="margin-top: 2em; text-align: center;">
+  <h3>Colores asignados:</h3>
+  <ul id="colorList" style="list-style: none; padding: 0;"></ul>
+</div>
+
+	
     <script>
 document.addEventListener('DOMContentLoaded', () => {
     const svg = document.querySelector('svg');
@@ -5843,7 +5849,7 @@ function resetColors() {
     }
 }
 
-	    function applyColor(hex) {
+function applyColor(hex) {
   if (selectedElement) {
     if (!selectedElement.hasAttribute('data-original-fill')) {
       const original = selectedElement.getAttribute('fill') || window.getComputedStyle(selectedElement).fill;
@@ -5852,11 +5858,13 @@ function resetColors() {
     selectedElement.setAttribute('fill', hex);
     selectedElement.style.fill = hex;
 
-    // ❗ Remove highlight and clear selection
     selectedElement.classList.remove("highlight");
     selectedElement = null;
+
+    updateColorSummary(); // 👈 Update summary after each change
   }
 }
+
 
 
 
@@ -5935,8 +5943,51 @@ function downloadPNG() {
     img.crossOrigin = "anonymous";
     img.src = url;
 }
+
+const colorNameMap = {
+  "#B0E0E6": "Arctic Blue",
+  "#F4C2C2": "Baby Pink",
+  "#D3CFC4": "Beige Grey",
+  "#013220": "Black Green",
+  "#0D0D0D": "Black Lacquer",
+  "#1E90FF": "Bolt Blue Lacquer",
+  "#B08D57": "Bronze Sky",
+  "#FFD300": "Bumblebee Yellow",
+  "#FFB7C5": "Cherry Blossom",
+  "#F5F5F5": "Clear lacquer",
+  "#191970": "Cosmic Blue Metallic",
+  "#DDD6CE": "Dune Sand",
+  "#50C878": "Emerald Lacquer",
+  "#FF4500": "Flame Lacquer",
+  "#A9A9A9": "Gloss Grey",
+  "#FFFFFF": "Gloss White",
+  "#FF69B4": "Hot Pink",
+  "#E0FFFF": "Lunar Ice",
+  "#98FB98": "Matcha green",
+  "#1C1C1C": "Matt Black"
+};
+
+function updateColorSummary() {
+  const list = document.getElementById("colorList");
+  list.innerHTML = "";
+
+  document.querySelectorAll("#bikeParts *").forEach(el => {
+    const fill = el.getAttribute("fill");
+    const name = el.id || el.getAttribute("data-name") || "Parte sin nombre";
+    const colorHex = fill?.toUpperCase();
+    const colorName = colorNameMap[colorHex] || colorHex;
+
+    if (fill && colorHex && colorName !== "#FFFFFF") {
+      const item = document.createElement("li");
+      item.textContent = `${name}: ${colorName}`;
+      list.appendChild(item);
+    }
+  });
+}
+
 </script>
 
+	
 	    <div id="controls">
         <div id="colorButtons" style="font-size: 30px"></div>
         <button onclick="resetColors()">Reset</button>
