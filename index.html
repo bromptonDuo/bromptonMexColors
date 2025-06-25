@@ -5714,7 +5714,7 @@ LgsdFlUkASncMUvtSfacaOdJo0pWZYKZpTPB3A==
     </div>
 
 	<div id="colorSummary" style="margin-top: 2em; text-align: center;">
-  <h3>Colores asignados:</h3>
+  Colores asignados:
   <ul id="colorList" style="list-style: none; padding: 0;"></ul>
 </div>
 
@@ -5973,17 +5973,20 @@ function updateColorSummary() {
 
   document.querySelectorAll("#bikeParts *").forEach(el => {
     const fill = el.getAttribute("fill");
-    const name = el.id || el.getAttribute("data-name") || "Parte sin nombre";
-    const colorHex = fill?.toUpperCase();
-    const colorName = colorNameMap[colorHex] || colorHex;
+    if (!fill) return;
 
-    if (fill && colorHex && colorName !== "#FFFFFF") {
-      const item = document.createElement("li");
-      item.textContent = `${name}: ${colorName}`;
-      list.appendChild(item);
-    }
+    const name = el.id || el.getAttribute("data-name") || "Parte sin nombre";
+
+    // Normalize the color (convert RGB to hex if needed)
+    const hex = rgbToHex(fill).toUpperCase();
+    const colorName = colorNameMap[hex] || hex;
+
+    const item = document.createElement("li");
+    item.textContent = `${name}: ${colorName}`;
+    list.appendChild(item);
   });
 }
+
 
 </script>
 
