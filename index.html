@@ -126,7 +126,7 @@
 		<g id="nonInteractive">
 			<g id="ignore">
 			</g>
-			<text id="ignore_x5F_logo" transform="matrix(1 0 0 1 85.6039 80.1666)" class="st2 st3">DISEÑA TU BROMPT0N IDEAL EDICIÓN méxico.</text>
+			<text id="ignore_x5F_logo" transform="matrix(1 0 0 1 85.6039 80.1666)" class="st2 st3">DISEÑA TU BROMPTON IDEAL EDICIÓN MÉXICO</text>
 			<path id="ignore_x5F_wheel3" class="st4" d="M158.39,452.78c1.2,2.14,2.27,4.37,3.18,6.68l23.73-3.95
 				c-2.17-6.69-5.19-12.99-8.95-18.78L158.39,452.78z"/>
 			<path id="ignore_x5F_wheel2" class="st4" d="M110.01,535.89c-30.61,0-55.51-25.03-55.51-55.8c0-30.77,24.9-55.8,55.51-55.8
@@ -5717,6 +5717,38 @@ LgsdFlUkASncMUvtSfacaOdJo0pWZYKZpTPB3A==
     </div>
 
     <script>
+document.addEventListener('DOMContentLoaded', () => {
+    const svg = document.querySelector('svg');
+
+    // Guardar color original al cargar
+    svg.querySelectorAll('#bikeParts *').forEach(el => {
+        if (!el.hasAttribute('data-original-fill')) {
+            const fill = el.getAttribute('fill') || window.getComputedStyle(el).fill || '#ffffff';
+            el.setAttribute('data-original-fill', fill);
+        }
+    });
+
+    svg.addEventListener('click', function(event) {
+        const target = event.target;
+        const insideBikeParts = target.closest('#bikeParts');
+        if (insideBikeParts && target.tagName !== 'svg') {
+            if (selectedElement) {
+                selectedElement.classList.remove("highlight");
+            }
+            selectedElement = target;
+            selectedElement.classList.add("highlight");
+            let currentColor = selectedElement.getAttribute('fill');
+            if (!currentColor || currentColor === 'none') {
+                currentColor = window.getComputedStyle(selectedElement).fill;
+            }
+            document.getElementById("colorPicker").value = rgbToHex(currentColor);
+        }
+    });
+
+    document.getElementById("colorPicker").addEventListener("input", function() {
+        applyColor(this.value);
+    });
+});
         const colors = [
             {name: 'Arctic Blue', hex: '#B0E0E6'},
             {name: 'Baby Pink', hex: '#F4C2C2'},
@@ -5753,6 +5785,19 @@ LgsdFlUkASncMUvtSfacaOdJo0pWZYKZpTPB3A==
             });
         }
 
+function resetColors() {
+    document.querySelectorAll('#bikeParts *').forEach(el => {
+        const original = el.getAttribute('data-original-fill');
+        if (original) {
+            el.setAttribute('fill', original);
+            el.style.fill = original;
+        }
+    });
+    if (selectedElement) {
+        selectedElement.classList.remove("highlight");
+        selectedElement = null;
+    }
+}
         function applyColor(hex) {
             if (selectedElement) {
                 if (!selectedElement.hasAttribute('data-original-fill')) {
@@ -5763,18 +5808,7 @@ LgsdFlUkASncMUvtSfacaOdJo0pWZYKZpTPB3A==
             }
         }
 
-        function resetColors() {
-            document.querySelectorAll('#bikeParts *').forEach(el => {
-                const original = el.getAttribute('data-original-fill');
-                if (original) {
-                    el.setAttribute('fill', original);
-                }
-            });
-            if (selectedElement) {
-                selectedElement.classList.remove("highlight");
-                selectedElement = null;
-            }
-        }
+
 
         function rgbToHex(rgb) {
             if (rgb.startsWith('#')) return rgb;
