@@ -42,6 +42,8 @@
         <div id="colorButtons"></div>
         <input type="color" id="colorPicker" value="#ff0000">
         <button onclick="resetColors()">Reset</button>
+	<button onclick="downloadPNG()">⬇️ Descargar PNG</button>
+
     </div>
     <div id="svgContainer">
         <?xml version="1.0" encoding="utf-8"?>
@@ -5807,5 +5809,40 @@ LgsdFlUkASncMUvtSfacaOdJo0pWZYKZpTPB3A==
             });
         });
     </script>
+
+	<script>
+function downloadPNG() {
+    const svgElement = document.querySelector("svg");
+    const clone = svgElement.cloneNode(true);
+
+    // Eliminar borde de selección
+    clone.querySelectorAll('.highlight').forEach(el => el.classList.remove('highlight'));
+
+    const svgData = new XMLSerializer().serializeToString(clone);
+    const canvas = document.createElement("canvas");
+    const svgSize = svgElement.getBoundingClientRect();
+    canvas.width = svgSize.width;
+    canvas.height = svgSize.height;
+
+    const ctx = canvas.getContext("2d");
+    const img = new Image();
+    const svgBlob = new Blob([svgData], {type: "image/svg+xml;charset=utf-8"});
+    const url = URL.createObjectURL(svgBlob);
+
+    img.onload = function () {
+        ctx.drawImage(img, 0, 0);
+        URL.revokeObjectURL(url);
+        const imgURI = canvas.toDataURL("image/png").replace("image/png", "octet-stream");
+
+        const a = document.createElement("a");
+        a.setAttribute("download", "brompton_design.png");
+        a.setAttribute("href", imgURI);
+        a.click();
+    };
+
+    img.src = url;
+}
+</script>
+
 </body>
 </html>
