@@ -5881,7 +5881,8 @@ function applyColor(hex) {
 
 
 function rgbToHex(rgb) {
-  if (rgb.startsWith('#')) return rgb.toLowerCase();
+	//alvaro
+  // if (rgb.startsWith('#')) return rgb.toLowerCase();
   const result = rgb.match(/\d+/g);
   if (!result || result.length < 3) return "#000000";
   return "#" + result.slice(0, 3).map(x => {
