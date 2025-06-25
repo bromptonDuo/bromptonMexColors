@@ -5852,6 +5852,14 @@ function resetColors() {
 
 function applyColor(hex) {
   if (selectedElement) {
+    const partName = selectedElement.id || selectedElement.getAttribute("data-name");
+
+    // Check for restrictions
+    if (restrictedColors[partName] && !restrictedColors[partName].includes(hex.toUpperCase())) {
+      alert(`Solo puedes aplicar Matt Black o Textured Silver a ${partName}.`);
+      return;
+    }
+
     if (!selectedElement.hasAttribute('data-original-fill')) {
       const original = selectedElement.getAttribute('fill') || window.getComputedStyle(selectedElement).fill;
       selectedElement.setAttribute('data-original-fill', original);
@@ -5862,9 +5870,10 @@ function applyColor(hex) {
     selectedElement.classList.remove("highlight");
     selectedElement = null;
 
-    updateColorSummary(); // 👈 Update summary after each change
+    updateColorSummary();
   }
 }
+
 
 
 
@@ -6031,6 +6040,9 @@ function updateColorSummary() {
 }
 
 
+const restrictedColors = {
+  "seatpost": ["#1C1C1C", "#C0C0C0"]  // Matt Black and Textured Silver
+};
 
 
 </script>
