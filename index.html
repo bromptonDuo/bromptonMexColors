@@ -60,7 +60,7 @@
 <style type="text/css">
 	.st0{fill:#E6E7E8;}
 	.st1{fill:#E6E7E8;stroke:#FFFFFF;stroke-width:0.5;stroke-miterlimit:10;}
-	.st2{font-family:'MetroDF';}
+	.st2{font-family:'ArialBlack';}
 	.st3{font-size:14.3975px;}
 	.st4{stroke:#A7A9AC;stroke-miterlimit:10;}
 	.st5{fill:#ED1F79;}
@@ -5882,7 +5882,7 @@ function applyColor(hex) {
 
 function rgbToHex(rgb) {
 	//alvaro
-  // if (rgb.startsWith('#')) return rgb.toLowerCase();
+   if (rgb.startsWith('#')) return rgb.toLowerCase();
   const result = rgb.match(/\d+/g);
   if (!result || result.length < 3) return "#000000";
   return "#" + result.slice(0, 3).map(x => {
